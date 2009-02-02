@@ -29,6 +29,7 @@
 		{include file="generic/title5.tpl" title="`$lang.ip_ranges`" content="`$table_ip_ranges`"}
 		{include file="generic/title5.tpl" title="`$lang.dns_zones`" content="`$table_dns`"}
 		{include file="generic/title5.tpl" title="`$lang.dns_nameservers`" content="`$table_nameservers`"}
+		{include file="generic/title5.tpl" title="`$lang.routers`" content="`$table_routers`"}
 		<br />
 		<div align="center">{include file=generic/link.tpl content="`$lang.node_plot_link`" onclick="javascript: t = window.open('$link_plot_link', 'popup_plot_link', 'width=600,height=420,toolbar=0,resizable=1,scrollbars=1'); t.focus(); return false;"}</div>
 	</td>
@@ -50,10 +51,11 @@
 			</tr>
 			<tr>
 				<td style="font-size:12px;" colspan="2" nowrap="nowrap">
-					<input type="checkbox" name="p2p" checked="checked" onclick="gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_orange.png" alt=$lang.backbone}{$lang.backbone}
-					<input type="checkbox" name="aps" checked="checked" onclick="gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_green.png" alt=$lang.aps}{$lang.aps}
-					<input type="checkbox" name="clients" checked="checked" onclick="gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_blue.png" alt=$lang.clients}{$lang.clients}
-					<input type="checkbox" name="unlinked" onclick="gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_red.png" alt=$lang.unlinked}{$lang.unlinked}
+					<input type="checkbox" name="p2p" checked="checked" onclick="document.getElementsByName('live')[0].checked = false; gmap_refresh(); " />{html_image file="`$img_dir`/gmap/mm_20_orange.png" alt=$lang.backbone}{$lang.backbone}
+					<input type="checkbox" name="aps" checked="checked" onclick="document.getElementsByName('live')[0].checked = false; gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_green.png" alt=$lang.aps}{$lang.aps}
+					<input type="checkbox" name="live" onclick="gmap_refresh(); " />{html_image file="`$img_dir`/gmap/mm_20_purple.png" alt=$lang.live}{$lang.live}
+					<input type="checkbox" name="clients" checked="checked" onclick="document.getElementsByName('live')[0].checked = false; gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_blue.png" alt=$lang.clients}{$lang.clients}
+					<input type="checkbox" name="unlinked" onclick="document.getElementsByName('live')[0].checked = false; gmap_refresh();" />{html_image file="`$img_dir`/gmap/mm_20_red.png" alt=$lang.unlinked}{$lang.unlinked}
 				</td>
 			</tr>
 		</table>

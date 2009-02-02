@@ -176,6 +176,9 @@
 					<td colspan="2" class="table-form-title"><img src="templates/basic/images/user-small.png" alt="{$lang.users}" />&nbsp;<a href="{$link_admin_users}">{$lang.users}</a></td>
 				</tr>
 				<tr class="table-form-row1">
+					<td colspan="2" class="table-form-title"><img src="templates/basic/images/services-small.png" alt="{$lang.routers}" />&nbsp;<a href="{$link_admin_nodes_routers}">{$lang.routers}</a></td>
+				</tr>
+				<tr class="table-form-row1">
 					<td colspan="2" class="table-form-title"><img src="templates/basic/images/services-small.png" alt="{$lang.services}" />&nbsp;<a href="{$link_admin_nodes_services}">{$lang.services}</a></td>
 				</tr>
 				<tr class="table-form-row1">

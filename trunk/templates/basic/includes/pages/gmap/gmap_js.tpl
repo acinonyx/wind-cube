@@ -23,14 +23,17 @@ var map;
 var selected = Array();
 var p2p_ap = Array();
 var p2p = Array();
+var live = Array();
 var aps = Array();
 var clients = Array();
 var unlinked = Array();
 var links_p2p = Array();
+var links_live = Array();
 var links_client = Array();
 var markers = Array();
 var polylines = Array();
 var ch_p2p;
+var ch_live;
 var ch_aps;
 var ch_clients;
 var ch_unlinked;
@@ -112,11 +115,28 @@ icon_grey[1].shadowSize = new GSize(37, 34);
 icon_grey[1].iconAnchor = new GPoint(9, 32);
 icon_grey[1].infoWindowAnchor = new GPoint(10, 1);
 
+
+var icon_purple = Array(new GIcon(), new GIcon());
+icon_purple[0].image = "{$img_dir}gmap/mm_20_purple.png";
+icon_purple[0].shadow = "{$img_dir}gmap/mm_20_shadow.png";
+icon_purple[0].iconSize = new GSize(12, 20);
+icon_purple[0].shadowSize = new GSize(22, 20);
+icon_purple[0].iconAnchor = new GPoint(6, 20);
+icon_purple[0].infoWindowAnchor = new GPoint(5, 1);
+
+icon_purple[1].image = "{$img_dir}gmap/mm_50_purple.png";
+icon_purple[1].shadow = "{$img_dir}gmap/mm_50_shadow.png";
+icon_purple[1].iconSize = new GSize(20, 34);
+icon_purple[1].shadowSize = new GSize(37, 34);
+icon_purple[1].iconAnchor = new GPoint(9, 32);
+icon_purple[1].infoWindowAnchor = new GPoint(10, 1);
+
 {literal}
 
 function gmap_onload() {
 	ch_p2p = document.getElementsByName("p2p")[0];
 	ch_aps = document.getElementsByName("aps")[0];
+	ch_live = document.getElementsByName("live")[0];
 	ch_clients = document.getElementsByName("clients")[0];
 	ch_unlinked = document.getElementsByName("unlinked")[0];
 	if (GBrowserIsCompatible()) {
@@ -163,26 +183,67 @@ function gmap_onload() {
 }
 
 function gmap_reload() {
-if (ch_aps.checked == true && ch_clients.checked == true) makePolylines(links_client, "#00ffff", "#ff0000", 2);
-if (ch_p2p.checked == true) makePolylines(links_p2p, "#00ff00", "#ff0000", 3);
-if (ch_unlinked.checked == true) makeMarkers(unlinked, icon_red, 100);
-if (ch_clients.checked == true) makeMarkers(clients, icon_blue, 100);
-if (ch_aps.checked == true) makeMarkers(aps, icon_green, 17-4);
-if (ch_p2p.checked == true) makeMarkers(p2p, icon_orange, 17-4);
-if (ch_p2p.checked == true || ch_aps.checked == true) makeMarkers(p2p_ap, icon_green, 17-4);
-makeMarkers(selected, icon_grey, 17-4);
+
+	if (ch_aps.checked == true && ch_clients.checked == true){
+		makePolylines(links_client, "#00ffff", "#ff0000", 2); 
+	}
+
+	if (ch_p2p.checked == true){
+		makePolylines(links_p2p, "#00ff00", "#ff0000", 3); 
+	}
+
+	if (ch_live.checked == true){
+		makePolylines(links_live, "#ff00ff", "#ff0000", 3); 
+	}
+
+	if (ch_unlinked.checked == true){ 
+		makeMarkers(unlinked, icon_red, 100); 
+	}
+
+	if (ch_clients.checked == true){
+		makeMarkers(clients, icon_blue, 100); 
+	}
+
+	if (ch_aps.checked == true){
+		makeMarkers(aps, icon_green, 17-4); 
+	}
+
+	if (ch_live.checked == true){ 
+		makeMarkers(live, icon_purple, 17-4); 
+	}
+
+	if (ch_p2p.checked == true){ 
+		makeMarkers(p2p, icon_orange, 17-4); 
+	}
+
+	if (ch_p2p.checked == true || ch_aps.checked == true){ 
+		makeMarkers(p2p_ap, icon_green, 17-4); 
+	}
+	
+	makeMarkers(selected, icon_grey, 17-4); 
 
 }
 
 function gmap_refresh() {
 	var ch_p2p = document.getElementsByName("p2p")[0];
+	var ch_live = document.getElementsByName("live")[0];
 	var ch_aps = document.getElementsByName("aps")[0];
 	var ch_clients = document.getElementsByName("clients")[0];
 	var ch_unlinked = document.getElementsByName("unlinked")[0];
+	
+	if (document.getElementsByName("live")[0].checked == true){
+		document.getElementsByName("p2p")[0].checked = false;
+		document.getElementsByName("aps")[0].checked = false;
+		document.getElementsByName("clients")[0].checked = false;
+		document.getElementsByName("unlinked")[0].checked = false;
+	}
+ 
 	if (((ch_p2p.checked == true && p2p.length > 0) || ch_p2p.checked == false) &&
 		((ch_aps.checked == true && aps.length > 0) || ch_aps.checked == false) &&
 		((ch_clients.checked == true && clients.length > 0) || ch_clients.checked == false) &&
-		((ch_unlinked.checked == true && unlinked.length > 0) || ch_unlinked.checked == false)) {
+		((ch_unlinked.checked == true && unlinked.length > 0) || ch_unlinked.checked == false) &&
+		((ch_live.checked == true && live.length > 0) || ch_live.checked == false)) {
+
 			map.clearOverlays();
 			markers = Array();
 			polylines = Array();
@@ -192,10 +253,12 @@ function gmap_refresh() {
 	var request = GXmlHttp.create();
 	var xml_url = "{/literal}{$link_xml_page}{literal}" +
 		(ch_p2p.checked == true && p2p.length == 0?"&show_p2p=1":"") +
+		(ch_live.checked == true && live.length == 0?"&show_live=1":"") +
 		(ch_aps.checked == true && aps.length == 0?"&show_aps=1":"") +
 		(ch_clients.checked == true && clients.length == 0?"&show_clients=1":"") +
 		(ch_unlinked.checked == true && unlinked.length == 0?"&show_unlinked=1":"") +
 		(ch_p2p.checked == true && links_p2p.length == 0?"&show_links_p2p=1":"") +
+		(ch_live.checked == true && links_live.length == 0?"&show_links_live=1":"") +
 		(ch_aps.checked == true && ch_clients.checked == true && links_client.length == 0?"&show_links_client=1":"");
 	request.open("GET", xml_url, true);
 	request.onreadystatechange =
@@ -206,10 +269,12 @@ function gmap_refresh() {
                                         if ((ch_p2p.checked == true || ch_aps.checked == true) && p2p_ap.length == 0) p2p_ap = xmlDoc.documentElement.getElementsByTagName("p2p-ap");
                                         if (ch_aps.checked == true && aps.length == 0) aps = xmlDoc.documentElement.getElementsByTagName("ap");
                                         if (ch_p2p.checked == true && p2p.length == 0) p2p = xmlDoc.documentElement.getElementsByTagName("p2p");
-                                        if (ch_clients.checked == true && clients.length == 0) clients = xmlDoc.documentElement.getElementsByTagName("client");
+					if (ch_live.checked == true && live.length == 0) live = xmlDoc.documentElement.getElementsByTagName("live");
+					if (ch_clients.checked == true && clients.length == 0) clients = xmlDoc.documentElement.getElementsByTagName("client");
                                         if (ch_unlinked.checked == true && unlinked.length == 0) unlinked = xmlDoc.documentElement.getElementsByTagName("unlinked");
                                         if (ch_p2p.checked == true && links_p2p.length == 0) links_p2p = xmlDoc.documentElement.getElementsByTagName("link_p2p");
-                                        if (ch_aps.checked == true && ch_clients.checked == true && links_client.length == 0) links_client = xmlDoc.documentElement.getElementsByTagName("link_client");
+					if (ch_live.checked == true && links_live.length == 0) links_live = xmlDoc.documentElement.getElementsByTagName("link_live");
+					if (ch_aps.checked == true && ch_clients.checked == true && links_client.length == 0) links_client = xmlDoc.documentElement.getElementsByTagName("link_client");
                                         map.clearOverlays();
                                         markers = Array();
                                         polylines = Array();

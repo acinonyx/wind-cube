@@ -62,6 +62,7 @@ class menu {
 				$this->tpl['is_admin'] = TRUE;
 				$this->tpl['link_admin_nodes'] = makelink(array("page" => "admin", "subpage" => "nodes"));
 				$this->tpl['link_admin_users'] = makelink(array("page" => "admin", "subpage" => "users"));
+				$this->tpl['link_admin_nodes_routers'] = makelink(array('page' => 'admin', 'subpage' => 'nodes_routers'));
 				$this->tpl['link_admin_nodes_services'] = makelink(array("page" => "admin", "subpage" => "nodes_services"));
 				$this->tpl['link_admin_services'] = makelink(array('page' => 'admin', 'subpage' => 'services'));
 				$this->tpl['link_admin_regions'] = makelink(array('page' => 'admin', 'subpage' => 'regions'));
