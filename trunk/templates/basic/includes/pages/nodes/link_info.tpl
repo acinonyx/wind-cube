@@ -41,16 +41,6 @@
 	<td class="{if $data[rowl].links__status == 'active'}link-up{else}link-down{/if}">{assign var=t value="links__status-"|cat:$data[rowl].links__status}{$lang.db.$t}</td>
 </tr>
 <tr>
-	<td class="table-node-key2">{$lang.db.links__live}</td>
-	<td class="{if $data[rowl].links__live == 'active'}link-up{else}link-down{/if}">{assign var=t value="links__live-"|cat:$data[rowl].links__live}{$lang.db.$t}</td>
-</tr>
-{if $data[rowl].prepends == $data[rowl].links__peer_node_id}
-<tr>
-	<td class="table-node-key2">{$lang.db.links__prepends}</td>
-	<td class="link-down">{$lang.db.links__prepends_yes}</td>
-</tr>
-{/if}
-<tr>
 	<td class="table-node-key2">{$lang.db.links__date_in}</td>
 	<td class="table-node-value2">{$data[rowl].links__date_in|date_format:"%x"}</td>
 </tr>

@@ -34,27 +34,15 @@ class gmap_xml {
 		$having = '';
 		if (get('node') != '') $having .= ($having!=''?' OR ':'')."id = ".intval(get('node'));
 		if (get('show_p2p') == 1) $having .= ($having!=''?' OR ':'').'total_p2p > 0';
-		if (get('show_live') == 1) $having .= ($having!=''?' OR ':'').'(total_p2p > 0 AND p2p.type = "p2p")';
 		if (get('show_aps') == 1) $having .= ($having!=''?' OR ':'').'total_aps > 0';
 		if (get('show_clients') == 1) $having .= ($having!=''?' OR ':'').'(total_p2p = 0 AND total_aps = 0 AND total_client_on_ap > 0)';
 		if (get('show_unlinked') == 1) $having .= ($having!=''?' OR ':'').'(total_p2p = 0 AND total_aps = 0 AND total_client_on_ap = 0)';
-		
-		if (get('show_live') == 1){
-			$JOIN_SQL = "
-					LEFT JOIN links AS p2p_t ON nodes.id = p2p_t.node_id
-					LEFT JOIN links AS p2p ON p2p.type = 'p2p' AND p2p_t.peer_node_id = p2p.node_id AND p2p.peer_node_id = p2p_t.node_id AND p2p.live = 'active'
-					";
-		}else{
-			$JOIN_SQL = "
-					LEFT JOIN links AS p2p_t ON nodes.id = p2p_t.node_id
-					LEFT JOIN links AS p2p ON p2p.type = 'p2p' AND p2p_t.peer_node_id = p2p.node_id AND p2p.peer_node_id = p2p_t.node_id
-					";
-		}
 		if ($having != '') $nodes = $db->get(
-		    'nodes.id, nodes.latitude, nodes.longitude, nodes.name AS nodes__name, areas.name AS areas__name, COUNT(DISTINCT p2p.id) AS total_p2p, COUNT(DISTINCT aps.id) AS total_aps, COUNT(DISTINCT clients.id) AS total_clients, COUNT(DISTINCT client_ap.id) AS total_client_on_ap, p2p.type',
+			'nodes.id, nodes.latitude, nodes.longitude, nodes.name AS nodes__name, areas.name AS areas__name, COUNT(DISTINCT p2p.id) AS total_p2p, COUNT(DISTINCT aps.id) AS total_aps, COUNT(DISTINCT clients.id) AS total_clients, COUNT(DISTINCT client_ap.id) AS total_client_on_ap',
 			'nodes
 			LEFT JOIN areas ON nodes.area_id = areas.id
-			'.$JOIN_SQL.'
+			LEFT JOIN links AS p2p_t ON nodes.id = p2p_t.node_id
+			LEFT JOIN links AS p2p ON p2p.type = "p2p" AND p2p_t.peer_node_id = p2p.node_id AND p2p.peer_node_id = p2p_t.node_id
 			LEFT JOIN links AS aps ON nodes.id = aps.node_id AND aps.type = "ap"
 			LEFT JOIN links AS client_ap ON p2p_t.type = "client" AND client_ap.type = "ap" AND p2p_t.peer_ap_id = client_ap.id
 			LEFT JOIN links AS clients ON p2p_t.type = "ap" AND clients.type = "client" AND clients.peer_ap_id = p2p_t.id
@@ -68,36 +56,23 @@ class gmap_xml {
 		$xml .= "<nodes>\r";
 		foreach ((array) $nodes as $key => $value) {
 			$xml .= "<";
-			
-			if (get('show_live') != 1){ 
-			
-				if (get('node') == $value['id']) {
-					$xml .= 'selected';
-				} elseif ($value['total_aps'] != 0 && $value['total_p2p'] != 0) {
-					$xml .= 'p2p-ap';
-				} elseif ($value['total_aps'] != 0) {
-					$xml .= 'ap';
-				} elseif ($value['total_p2p'] != 0) {
-					$xml .= 'p2p';
-				} elseif ($value['total_client_on_ap'] != 0) {
-					$xml .= 'client';
-				} else {
-					$xml .= 'unlinked';
-				}
-			}else{
-			
-				if (get('node') == $value['id']) {
-					$xml .= 'selected';
-				}else{
-					$xml .= 'live';
-				}
-			
-			}	
+			if (get('node') == $value['id']) {
+				$xml .= 'selected';
+			} elseif ($value['total_aps'] != 0 && $value['total_p2p'] != 0) {
+				$xml .= 'p2p-ap';
+			} elseif ($value['total_aps'] != 0) {
+				$xml .= 'ap';
+			} elseif ($value['total_p2p'] != 0) {
+				$xml .= 'p2p';
+			} elseif ($value['total_client_on_ap'] != 0) {
+				$xml .= 'client';
+			} else {
+				$xml .= 'unlinked';
+			}
 			$xml .= ' id="'.$value['id'].'"';
 			$xml .= ' name="'.htmlspecialchars($value['nodes__name'], ENT_COMPAT, $lang['charset']).'"';
 			$xml .= ' area="'.htmlspecialchars($value['areas__name'], ENT_COMPAT, $lang['charset']).'"';
 			if ($value['total_p2p'] != 0) $xml .= ' p2p="'.$value['total_p2p'].'"';
-			if ($value['total_p2p'] != 0 && get('show_live') == 1) $xml .= ' live="'.$value['total_p2p'].'"';
 			if ($value['total_aps'] != 0) $xml .= ' aps="'.$value['total_aps'].'"';
 			if ($value['total_client_on_ap'] != 0) $xml .= ' client_on_ap="'.$value['total_client_on_ap'].'"';
 			if ($value['total_clients'] != 0) $xml .= ' clients="'.$value['total_clients'].'"';
@@ -110,10 +85,9 @@ class gmap_xml {
 		
 		$where = '';
 		if (get('show_links_p2p') == 1) $where .= ($where!=''?' OR ':'')."p2p.type = 'p2p'";
-		if (get('show_links_live') == 1) $where .= ($where!=''?' OR ':'')."(l1.live = 'active' AND p2p.type = 'p2p')";
 		if (get('show_links_client') == 1) $where .= ($where!=''?' OR ':'')."clients.type = 'client'";
 		if ($where != '') $links = $db->get(
-			'IFNULL(p2p.id, clients.id) AS id, IFNULL(p2p.type, clients.type) AS type, n1.latitude AS n1_lat, n1.longitude AS n1_lon, IFNULL(n_p2p.latitude, n_clients.latitude) AS n2_lat, IFNULL(n_p2p.longitude, n_clients.longitude) AS n2_lon, l1.status AS l1_status, IFNULL(p2p.status, clients.status) AS l2_status, l1.live AS l1_live',
+			'IFNULL(p2p.id, clients.id) AS id, IFNULL(p2p.type, clients.type) AS type, n1.latitude AS n1_lat, n1.longitude AS n1_lon, IFNULL(n_p2p.latitude, n_clients.latitude) AS n2_lat, IFNULL(n_p2p.longitude, n_clients.longitude) AS n2_lon, l1.status AS l1_status, IFNULL(p2p.status, clients.status) AS l2_status',
 			'links AS l1 ' .
 			"LEFT JOIN links AS p2p ON (l1.id < p2p.id AND l1.type = 'p2p' AND p2p.type = 'p2p' AND l1.node_id = p2p.peer_node_id AND p2p.node_id = l1.peer_node_id) " .
 			"LEFT JOIN links AS clients ON (l1.type = 'ap' AND clients.type = 'client' AND l1.id = clients.peer_ap_id) " .
@@ -124,14 +98,12 @@ class gmap_xml {
 			);
 		$xml .= "<links>\r";
 		foreach ((array) $links as $key => $value) {
-			if (get('show_links_live') == 1){ $value['type'] = 'live'; }
 			$xml .= "<link_".$value['type'];
 			$xml .= ' id="'.$value['id'].'"';
 			$xml .= ' lat1="'.$value['n1_lat'].'"';
 			$xml .= ' lon1="'.$value['n1_lon'].'"';
 			$xml .= ' lat2="'.$value['n2_lat'].'"';
 			$xml .= ' lon2="'.$value['n2_lon'].'"';
-			if (get('show_links_live') == 1){ $value['l1_status'] = $value['l1_live']; $value['l2_status'] = $value['l1_live']; }
 			$xml .= ' status="'.($value['l1_status']!='active' || $value['l2_status']!='active'?'inactive':'active').'"';
 			$xml .= " />\r";
 		}

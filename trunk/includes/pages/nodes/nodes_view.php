@@ -138,18 +138,15 @@ class nodes_view {
 	function table_links_p2p() {
 		global $db;
 		$table_links = new table(array('TABLE_NAME' => 'table_links_p2p'));
-
 		$table_links->db_data(
-			'"" AS distance, n1.name AS node_name, n1.id AS node_id, n2.name AS peer_node_name, l1.type AS links__type, l1.info AS links__info, l1.peer_node_id AS links__peer_node_id, l1.date_in AS links__date_in, l1.ssid AS links__ssid, l1.protocol AS links__protocol, l1.channel AS links__channel, l1.equipment AS links__equipment, l1.status AS l1_status, l2.status AS l2_status, l1.live AS l1_live, l2.live AS l2_live, "" AS links__status, "" AS links__live, prepends.nodeid AS prepends',
+			'"" AS distance, n1.name AS node_name, n1.id AS node_id, n2.name AS peer_node_name, l1.type AS links__type, l1.info AS links__info, l1.peer_node_id AS links__peer_node_id, l1.date_in AS links__date_in, l1.ssid AS links__ssid, l1.protocol AS links__protocol, l1.channel AS links__channel, l1.equipment AS links__equipment, l1.status AS l1_status, l2.status AS l2_status, "" AS links__status',
 			'links AS l1
 			INNER JOIN links AS l2 ON l1.peer_node_id = l2.node_id
 			INNER JOIN nodes AS n1 ON l1.node_id = n1.id
-			INNER JOIN nodes AS n2 ON l2.node_id = n2.id
-			LEFT JOIN live_prepends AS prepends ON l1.node_id = prepends.parent_nodeid AND l2.node_id = prepends.nodeid',
+			INNER JOIN nodes AS n2 ON l2.node_id = n2.id',
 			"l1.node_id = ".intval(get('node'))." AND l2.peer_node_id = l1.node_id AND l1.type ='p2p' AND l2.type = 'p2p'",
 			"",
 			"l1.date_in ASC");
-
 		$table_links->db_data(
 			'"" AS distance, n1.name AS node_name, n1.id AS node_id, n2.name AS peer_node_name, l1.type AS links__type, l1.info AS links__info, l2.node_id AS links__peer_node_id, l1.date_in AS links__date_in, l2.ssid AS links__ssid, l2.protocol AS links__protocol, l2.channel AS links__channel, l1.equipment AS links__equipment, l1.status AS l1_status, l2.status AS l2_status, "" AS links__status',
 			'links AS l1
@@ -159,7 +156,6 @@ class nodes_view {
 			"l1.node_id = ".intval(get('node'))." AND l1.type ='client' AND l2.type = 'ap'",
 			"",
 			"l1.date_in ASC");
-
 		foreach( (array) $table_links->data as $key => $value) {
 			$table_links->data[$key]['distance'] = $this->calculate_distance($table_links->data[$key]['node_id'], $table_links->data[$key]['links__peer_node_id']);
 			if ($key != 0) {
@@ -168,17 +164,11 @@ class nodes_view {
 				} else {
 					$table_links->data[$key]['links__status'] = 'inactive';
 				}
-				if ($table_links->data[$key]['l1_live'] == 'active' && $table_links->data[$key]['l2_live'] == 'active') {
-					$table_links->data[$key]['links__live'] = 'active';
-				} else {
-					$table_links->data[$key]['links__live'] = 'inactive';
-				}
 				$table_links->info['EDIT'][$key] = makelink(array('page' => 'nodes', 'node' => $table_links->data[$key]['links__peer_node_id']));
 			}
 		}
-
-		$table_links->db_data_translate('links__status','links__live', 'links__type');
-		$table_links->db_data_hide('peer_node_name', 'links__info', 'links__peer_node_id', 'l1_status', 'l2_status', 'l1_live', 'l2_live' );
+		$table_links->db_data_translate('links__status', 'links__type');
+		$table_links->db_data_hide('peer_node_name', 'links__info', 'links__peer_node_id', 'l1_status', 'l2_status');
 		return $table_links;
 	}
 	
@@ -280,29 +270,6 @@ class nodes_view {
 		return $table_services;
 	}
 	
-	function table_routers() {
-		global $db;
-		$table_routers = new table(array('TABLE_NAME' => 'table_routers', 'FORM_NAME' => 'table_routers'));
-		$table_routers->db_data(
-			'nodes_routers.id, nodes.id AS nodes__id, ip_addresses.ip, nodes_routers.status, nodes_routers.date_in',
-			'nodes_routers
-			LEFT JOIN nodes on nodes_routers.node_id = nodes.id
-			LEFT JOIN ip_addresses ON ip_addresses.id = nodes_routers.ip_id',
-			"nodes_routers.node_id = '".get('node')."'",
-			'',
-			"nodes_routers.date_in ASC");
-
-		foreach( (array) $table_routers->data as $key => $value) {
-			if ($key != 0) {
-				$table_routers->data[$key]['ip'] = long2ip($table_routers->data[$key]['ip']);
-			}
-		}
-
-		$table_routers->db_data_remove('id','nodes__id');
-		$table_routers->db_data_translate('nodes_routers__status');
-		return $table_routers;
-	}
-
 	function output() {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST' && method_exists($this, 'output_onpost_'.$_POST['form_name'])) return call_user_func(array($this, 'output_onpost_'.$_POST['form_name']));
 		global $construct, $db, $vars, $main;
@@ -338,7 +305,6 @@ class nodes_view {
 
 		$this->tpl['table_ipaddr_subnets'] = $construct->table($this->table_ipaddr_subnets(), __FILE__);
 		$this->tpl['table_services'] = $construct->table($this->table_services(), __FILE__);
-		$this->tpl['table_routers'] = $construct->table($this->table_routers(), __FILE__);
 		$t = $db->get('id, date_in, view_point, info', 'photos', "node_id = ".intval(get('node')));
 		foreach( (array) $t as $key => $value) {
 			$this->tpl['photosview'][$value['view_point']] = $value;

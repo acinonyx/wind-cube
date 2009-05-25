@@ -291,32 +291,6 @@ class mynodes {
 		return $table_services;
 	}
 	
-	function table_routers() {
-		global $construct, $db, $main;
-		$table_routers = new table(array('TABLE_NAME' => 'table_routers', 'FORM_NAME' => 'table_routers'));
-		$table_routers->db_data(
-			'nodes_routers.id, nodes.id AS nodes__id, ip_addresses.ip,  nodes_routers.password, nodes_routers.status, nodes_routers.date_in',
-			'nodes_routers
-			LEFT JOIN nodes on nodes_routers.node_id = nodes.id
-			LEFT JOIN ip_addresses ON ip_addresses.id = nodes_routers.ip_id',
-			"nodes_routers.node_id = '".get('node')."'",
-			'',
-			"nodes_routers.date_in ASC");
-		foreach( (array) $table_routers->data as $key => $value) {
-			if ($key != 0) {
-				if ($table_routers->data[$key]['ip']) 
-					$table_routers->data[$key]['ip'] = long2ip($table_routers->data[$key]['ip']);
-				$table_routers->info['EDIT'][$key] = makelink(array("page" => "mynodes", "subpage" => "routers", "node" => intval(get('node')), "router" => $table_routers->data[$key]['id']));
-			}
-		}
-		$table_routers->info['EDIT_COLUMN'] = 'ip';
-		$table_routers->db_data_translate('nodes_routers__status');
-		$table_routers->db_data_multichoice('nodes_routers', 'id');
-		$table_routers->info['MULTICHOICE_LABEL'] = 'delete';
-		$table_routers->db_data_remove('id','nodes__id');
-		return $table_routers;
-	}
-	
 	function table_photosview() {
 		global $db, $vars;
 		$table_photosview = new table(array('TABLE_NAME' => 'table_photosview', 'FORM_NAME' => 'table_photosview'));
@@ -378,7 +352,6 @@ class mynodes {
 				$this->tpl['table_subnets'] = $construct->table($this->table_subnets(), __FILE__);
 				$this->tpl['table_ipaddr'] = $construct->table($this->table_ipaddr(), __FILE__);
 				$this->tpl['table_services'] = $construct->table($this->table_services(), __FILE__);
-				$this->tpl['table_routers'] = $construct->table($this->table_routers(), __FILE__);
 				$this->tpl['table_photosview'] = $construct->table($this->table_photosview(), __FILE__);
 				if ($this->has_owner_access()) $this->tpl['link_node_delete'] = makelink(array('action' => 'delete'), TRUE);
 				$this->tpl['link_node_view'] = makelink(array('page' => 'nodes', 'node' => get('node')));
@@ -390,7 +363,6 @@ class mynodes {
 				$this->tpl['link_subnet_add'] = makelink(array('page' => 'mynodes', 'subpage' => 'subnet', 'node' => get('node'), 'subnet' => 'add'));
 				$this->tpl['link_ipaddr_add'] = makelink(array('page' => 'mynodes', 'subpage' => 'ipaddr', 'node' => get('node'), 'ipaddr' => 'add'));
 				$this->tpl['link_services_add'] = makelink(array('page' => 'mynodes', 'subpage' => 'services', 'node' => get('node'), 'service' => 'add'));
-				$this->tpl['link_routers_add'] = makelink(array('page' => 'mynodes', 'subpage' => 'routers', 'node' => get('node'), 'router' => 'add'));
 
 			}
 			$this->tpl['link_gmap_pickup'] = makelink(array('page' => 'pickup', 'subpage' => 'gmap', "object_lat" => "form_node.elements['nodes__latitude']", "object_lon" => "form_node.elements['nodes__longitude']"));
@@ -432,8 +404,7 @@ class mynodes {
 			$db->set('dns_zones', array('node_id' => $_POST['nodes__id']), "node_id = ".intval(get('node')));
 			$db->set('ip_addresses', array('node_id' => $_POST['nodes__id']), "node_id = ".intval(get('node')));
 			$db->set('ip_ranges', array('node_id' => $_POST['nodes__id']), "node_id = ".intval(get('node')));
-			$db->set('nodes_services', array('node_id' => $_POST['nodes__id']), "node_id = '".get('node')."'");
-			$db->set('nodes_routers', array('node_id' => $_POST['nodes__id']), "node_id = '".get('node')."'");
+			$db->set('services', array('node_id' => $_POST['nodes__id']), "node_id = '".get('node')."'");
 			$db->set('links', array('node_id' => $_POST['nodes__id']), "node_id = ".intval(get('node')));
 			$db->set('links', array('peer_node_id' => $_POST['nodes__id']), "peer_node_id = ".intval(get('node')));
 			$db->set('photos', array('node_id' => $_POST['nodes__id']), "node_id = ".intval(get('node')));
@@ -557,19 +528,6 @@ class mynodes {
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
 			$ret = $ret && $db->del("nodes_services", "id = '".$value."'");
-		}
-		if ($ret) {
-			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
-		} else {
-			$main->message->set_fromlang('error', 'generic');		
-		}
-	}
-	
-	function output_onpost_table_routers() {
-		global $db, $main;
-		$ret = TRUE;
-		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("nodes_routers", "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));

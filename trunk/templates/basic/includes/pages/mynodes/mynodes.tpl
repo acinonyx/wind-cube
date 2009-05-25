@@ -90,12 +90,6 @@
 </tr>
 <tr>
 <td class="table-page-pad">
-{include assign="t1" file="generic/link.tpl" link=$link_routers_add content="`$lang.routers_add`"}
-{include file=generic/title2.tpl title="`$lang.routers` $t1" content=$table_routers}
-</td>
-</tr>
-<tr>
-<td class="table-page-pad">
 {include file=generic/title2.tpl title="`$lang.myview`" content=$table_photosview}
 </td>
 </tr>
