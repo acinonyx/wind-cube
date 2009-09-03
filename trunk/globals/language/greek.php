@@ -20,7 +20,7 @@
  */
 
 /* el_GR for GNU/Linux - ell for Windows */
-setlocale(LC_ALL, 'el_GR', 'ell');
+setlocale(LC_ALL, 'el_GR.utf8', 'ell');
 
 $lang = array(
 
