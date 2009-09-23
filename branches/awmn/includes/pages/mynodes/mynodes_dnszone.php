@@ -3,6 +3,7 @@
  * WiND - Wireless Nodes Database
  *
  * Copyright (C) 2005 Nikolaos Nikalexis <winner@cube.gr>
+ * Copyright (C) 2009 Vasilis Tsiligiannis <b_tsiligiannis@silverton.gr>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,12 +77,14 @@ class mynodes_dnszone {
 		if (substr($_POST['dns_zones__name'], -strlen($vars['dns']['root_zone'])-1) == ".".$vars['dns']['root_zone']) {
 			$_POST['dns_zones__name'] = substr($_POST['dns_zones__name'], 0, -strlen($vars['dns']['root_zone'])-1);
 		}
+		$_POST['dns_zones__name'] = validate_zone($_POST['dns_zones__name']);
 		$form_zone = $this->form_zone();
 		$ret = TRUE;
 		$f = array();
 		if (get('zone') == 'add') {
 			if ($_POST['dns_zones__name'] == '') {
-				$db->output_error_fields_required(array('dns_zones__name'));
+				if (is_null($_POST['dns_zones__name'])) $main->message->set_fromlang('error', 'zone_invalid_name');
+				else $db->output_error_fields_required(array('dns_zones__name'));
 				return;
 			}
 			$f = array('dns_zones.status' => 'waiting', 'dns_zones.type' => get('type'), "dns_zones.node_id" => intval(get('node')));
