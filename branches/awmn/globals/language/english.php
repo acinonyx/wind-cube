@@ -495,6 +495,10 @@ $lang = array(
 				'title' => 'The node was not found',
 				'body' => 'The node you are looking for does not exist. Check that you supplied the correct data and try again. If you are sure that you submit the correct data, it is likely that the node has been deleted or that the user has not activated his/her account yet.'
 			),
+			'zone_invalid_name' => array(
+				'title' => 'Invalid zone name',
+				body => 'The name of the zone contains invalid characters.'
+			),
 			'generic' => array(
 				'title' => "General error",
 				'body' => "A general error occured. Please, report this to the system administrator(s)."
