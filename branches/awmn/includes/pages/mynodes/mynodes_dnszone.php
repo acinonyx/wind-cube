@@ -80,6 +80,10 @@ class mynodes_dnszone {
 		$ret = TRUE;
 		$f = array();
 		if (get('zone') == 'add') {
+			if ($_POST['dns_zones__name'] == '') {
+				$db->output_error_fields_required(array('dns_zones__name'));
+				return;
+			}
 			$f = array('dns_zones.status' => 'waiting', 'dns_zones.type' => get('type'), "dns_zones.node_id" => intval(get('node')));
 			$ret = $form_zone->db_set($f,
 									"dns_zones", "id", get('zone'));
