@@ -87,6 +87,31 @@ class mynodes_dnszone {
 				else $db->output_error_fields_required(array('dns_zones__name'));
 				return;
 			}
+			switch (get('type')) {
+				case 'forward':
+					if ($_POST['dns_zones__name'].'.'.$vars['dns']['root_zone'] == $vars['dns']['ns_zone']) {
+						$main->message->set_fromlang('error', 'zone_reserved_name');
+						return;
+					}
+					break;
+				case 'reverse':
+					$iprange = $db->get("ip_start, ip_end",
+							"ip_ranges",
+							"node_id = ".intval(get('node')));
+					foreach( (array) $iprange as $value)
+						if (reverse_zone_from_ip(long2ip($value['ip_start'])) == $_POST['dns_zones__name']) {
+							$valid = TRUE;
+							break;
+						}
+					if (!$valid) {
+						$main->message->set_fromlang('error', 'zone_out_of_range');
+						return;
+					}
+					break;
+				default:
+					$main->message->set_fromlang('error', 'generic');		
+					return;
+			}
 			$f = array('dns_zones.status' => 'waiting', 'dns_zones.type' => get('type'), "dns_zones.node_id" => intval(get('node')));
 			$ret = $form_zone->db_set($f,
 									"dns_zones", "id", get('zone'));

@@ -499,6 +499,14 @@ $lang = array(
 				'title' => 'Invalid zone name',
 				'body' => 'The name of the zone contains invalid characters.'
 			),
+			'zone_out_of_range' => array(
+				'title' => 'Zone name not in C-Class',
+				'body' => 'The name of the zone does not match to any of the IP C-Classes that have been assigned to your node.'
+			),
+			'zone_reserved_name' => array(
+				'title' => 'Reserved zone name',
+				'body' => 'The name of the zone is reserved by the system.'
+			),
 			'generic' => array(
 				'title' => "General error",
 				'body' => "A general error occured. Please, report this to the system administrator(s)."
