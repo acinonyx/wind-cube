@@ -497,7 +497,7 @@ $lang = array(
 			),
 			'zone_invalid_name' => array(
 				'title' => 'Invalid zone name',
-				body => 'The name of the zone contains invalid characters.'
+				'body' => 'The name of the zone contains invalid characters.'
 			),
 			'generic' => array(
 				'title' => "General error",
