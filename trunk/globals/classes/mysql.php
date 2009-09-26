@@ -3,6 +3,7 @@
  * WiND - Wireless Nodes Database
  *
  * Copyright (C) 2005 Nikolaos Nikalexis <winner@cube.gr>
+ * Copyright (C) 2009 Vasilis Tsiligiannis <b_tsiligiannis@silverton.gr>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -172,11 +173,11 @@ class mysql {
 		return $res;
 	}
 
-	function del($table, $where="", $addlog=TRUE) {
+	function del($table, $using="", $where="", $addlog=TRUE) {
 		$table_start = preg_split("/[\s,]+/", $table);
 		$table_start = $table_start[0];
-		if ($addlog && $this->log) $aff = $this->query_data("SELECT ".$table_start.".id FROM $table".($where==""?"":" WHERE $where"));
-		$query = "DELETE FROM $table".($where==""?"":" WHERE $where");
+		if ($addlog && $this->log) $aff = $this->query_data("SELECT ".$table_start.".id FROM ".($using==""?"$table":"$using").($where==""?"":" WHERE $where"));
+		$query = "DELETE FROM $table".($using==""?"":" USING $using").($where==""?"":" WHERE $where");
 		$res = $this->query_data($query);
 		if ($addlog && isset($aff)) {
 			for ($i=0;$i<count($aff);$i++) {

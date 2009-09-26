@@ -3,6 +3,7 @@
  * WiND - Wireless Nodes Database
  *
  * Copyright (C) 2005 Nikolaos Nikalexis <winner@cube.gr>
+ * Copyright (C) 2009 Vasilis Tsiligiannis <b_tsiligiannis@silverton.gr>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -329,7 +330,7 @@ class mynodes {
 		$this->tpl['form_node'] = $construct->form($this->form_node(), __FILE__);
 		$this->tpl['node'] = get('node');
 		if (get('action') == 'delete') {
-			if ($db->del('nodes', "id = ".intval(get('node')))) { 
+			if ($db->del('nodes', '', "id = ".intval(get('node')))) { 
 				$main->message->set_fromlang('info', 'delete_success', makelink());
 			} else {
 				$main->message->set_fromlang('error', 'generic');		
@@ -418,7 +419,7 @@ class mynodes {
 		if ($ret && ($this->has_owner_access() || get('node')=='add')) {
 			$ret = $ret && $form_node->db_set_multi(array(), "users_nodes", "node_id", $ins_id);
 			if ($_POST['user_id_owner'] != '') {
-				$ret = $ret && $db->del('users_nodes', "user_id = '".$_POST['user_id_owner']."' AND node_id = '".$ins_id."'");
+				$ret = $ret && $db->del('users_nodes', '', "user_id = '".$_POST['user_id_owner']."' AND node_id = '".$ins_id."'");
 				$ret = $ret && $db->add('users_nodes', array("user_id" => $_POST['user_id_owner'], "node_id" => $ins_id, 'owner' => 'Y'));
 			}
 		}
@@ -475,7 +476,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("links", "id = '".$value."'");
+			$ret = $ret && $db->del("links", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -488,7 +489,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("links", "id = '".$value."'");
+			$ret = $ret && $db->del("links", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -501,7 +502,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("subnets", "id = '".$value."'");
+			$ret = $ret && $db->del("subnets", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -514,7 +515,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("ip_addresses", "id = '".$value."'");
+			$ret = $ret && $db->del("ip_addresses", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -527,7 +528,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("nodes_services", "id = '".$value."'");
+			$ret = $ret && $db->del("nodes_services", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -540,7 +541,7 @@ class mynodes {
 		global $vars, $db, $main;
 		if (isset($_POST['id'])) {
 			foreach( (array) $_POST['id'] as $key => $value) {
-				$db->del("photos", "id = '".$value."'");
+				$db->del("photos", '', "id = '".$value."'");
 				$uploaddir = $vars['folders']['photos'];
 				$filename = 'photo-'.$value.".*";
 				delfile(ROOT_PATH.$uploaddir.$filename);
@@ -557,7 +558,7 @@ class mynodes {
 				$filename = 'photo-'.$ins_id.'.jpg';
 				$filename_s = 'photo-'.$ins_id.'-s.jpg';
 				if (@move_uploaded_file($_FILES[$value]['tmp_name'], ROOT_PATH.$uploaddir.$filename) === FALSE) {
-					$db->del("photos", "id = '".$ins_id."'");
+					$db->del("photos", '', "id = '".$ins_id."'");
 					$main->message->set_fromlang("error", "upload_file_failed");
 					return;
 				}
