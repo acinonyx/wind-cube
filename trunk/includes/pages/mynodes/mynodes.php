@@ -392,11 +392,6 @@ class mynodes {
 			if ($old_v[0]['name'] != $_POST['nodes__name']) {
 				$name_ns = validate_name_ns($_POST['nodes__name'], get('node'));
 			}
-			if ($old_v[0]['area_id'] != $_POST['nodes__area_id'] && 
-					$db->cnt('', 'ip_ranges', "node_id = ".intval(get('node'))) > 0) {
-				$main->message->set_fromlang('error', 'nodes_field_area_id', makelink("",TRUE));
-				return;
-			}
 		}
 		
 		$ret = $ret && $form_node->db_set(array('name_ns' => $name_ns), "nodes", "id", intval(get('node')));
