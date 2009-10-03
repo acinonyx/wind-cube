@@ -480,7 +480,7 @@ class mynodes {
 	function output_onpost_table_nameservers() {
 		global $db, $main;
 		$ret = TRUE;
-		$ret = $ret && $db->set("dns_nameservers, ip_ranges, nodes", array('dns_nameservers.delete_req' => 'N'), "dns_nameservers.ip >= ip_ranges.ip_start AND dns_nameservers.ip <= ip_ranges.ip_end AND ip_ranges.node_id = ".intval(get('node'))." AND ip_ranges.node_id = nodes.id");
+		$ret = $ret && $db->set("dns_nameservers", array('delete_req' => 'N'), "node_id = ".intval(get('node')));
 		foreach( (array) $_POST['id'] as $key => $value) {
 			$ret = $ret && $db->set("dns_nameservers", array('delete_req' => 'Y'), "id = '".intval($value)."' AND node_id =  ".intval(get('node')));
 		}
