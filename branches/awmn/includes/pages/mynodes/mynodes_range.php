@@ -39,8 +39,7 @@ class mynodes_range {
 		
 		$data = $db->get("ip_ranges.ip_start AS ip_start, ip_ranges.ip_end AS ip_end, areas.ip_start AS area_ip_start, areas.ip_end AS area_ip_end",
 					"ip_ranges
-					INNER JOIN nodes ON nodes.id = ip_ranges.node_id
-					INNER JOIN areas ON nodes.area_id = areas.id",
+					INNER JOIN areas",
 					"areas.ip_start <= ip_ranges.ip_start AND areas.ip_end >= ip_ranges.ip_end AND areas.id = '".$area_id."'", "" , "ip_end ASC");
 		
 		if (count($data) == 0) {
