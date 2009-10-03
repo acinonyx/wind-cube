@@ -76,7 +76,7 @@ class hostmaster_dnszones {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("dns_zones", "id = '".$value."'");
+			$ret = $ret && $db->del("dns_zones", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));

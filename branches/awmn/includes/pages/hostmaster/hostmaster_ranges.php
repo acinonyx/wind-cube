@@ -86,7 +86,7 @@ class hostmaster_ranges {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("ip_ranges", "id = '".$value."'");
+			$ret = $ret && $db->del("ip_ranges", '', "id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
