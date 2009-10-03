@@ -430,7 +430,7 @@ class mynodes {
 		$ret = TRUE;
 		$ret = $ret && $db->set("ip_ranges", array('delete_req' => 'N'), "node_id = ".intval(get('node')));
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->set("ip_ranges", array('delete_req' => 'Y'), "id = '".$value."'");
+			$ret = $ret && $db->set("ip_ranges", array('delete_req' => 'Y'), "id = '".$value."' AND node_id =  ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'update_success', makelink("",TRUE));
@@ -444,7 +444,7 @@ class mynodes {
 		$ret = TRUE;
 		$ret = $ret && $db->set("dns_zones", array('delete_req' => 'N'), "node_id = ".intval(get('node')));
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->set("dns_zones", array('delete_req' => 'Y'), "id = '".$value."'");
+			$ret = $ret && $db->set("dns_zones", array('delete_req' => 'Y'), "id = '".$value."' AND node_id =  ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'update_success', makelink("",TRUE));
@@ -458,7 +458,7 @@ class mynodes {
 		$ret = TRUE;
 		$ret = $ret && $db->set("dns_nameservers, ip_ranges, nodes", array('dns_nameservers.delete_req' => 'N'), "dns_nameservers.ip >= ip_ranges.ip_start AND dns_nameservers.ip <= ip_ranges.ip_end AND ip_ranges.node_id = ".intval(get('node'))." AND ip_ranges.node_id = nodes.id");
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->set("dns_nameservers", array('delete_req' => 'Y'), "id = '".$value."'");
+			$ret = $ret && $db->set("dns_nameservers", array('delete_req' => 'Y'), "id = '".$value."' AND node_id =  ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'update_success', makelink("",TRUE));
@@ -471,7 +471,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("links", '', "id = '".$value."'");
+			$ret = $ret && $db->del("links", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -484,7 +484,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("links", '', "id = '".$value."'");
+			$ret = $ret && $db->del("links", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -497,7 +497,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("subnets", '', "id = '".$value."'");
+			$ret = $ret && $db->del("subnets", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -510,7 +510,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("ip_addresses", '', "id = '".$value."'");
+			$ret = $ret && $db->del("ip_addresses", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -523,7 +523,7 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("nodes_services", '', "id = '".$value."'");
+			$ret = $ret && $db->del("nodes_services", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
@@ -536,7 +536,7 @@ class mynodes {
 		global $vars, $db, $main;
 		if (isset($_POST['id'])) {
 			foreach( (array) $_POST['id'] as $key => $value) {
-				$db->del("photos", '', "id = '".$value."'");
+				$db->del("photos", '', "id = '".$value."' AND node_id = ".intval(get('node')));
 				$uploaddir = $vars['folders']['photos'];
 				$filename = 'photo-'.$value.".*";
 				delfile(ROOT_PATH.$uploaddir.$filename);
