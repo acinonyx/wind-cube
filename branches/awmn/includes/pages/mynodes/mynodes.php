@@ -330,7 +330,31 @@ class mynodes {
 		$this->tpl['form_node'] = $construct->form($this->form_node(), __FILE__);
 		$this->tpl['node'] = get('node');
 		if (get('action') == 'delete') {
-			if ($db->del('nodes', '', "id = ".intval(get('node')))) { 
+			if ($db->del('nodes, 
+					dns_nameservers, 
+					dns_zones, 
+					dns_zones_nameservers, 
+					ip_addresses, 
+					ip_ranges, 
+					links, 
+					nodes_services, 
+					photos, 
+					services, 
+					subnets, 
+					users_nodes', 
+				'nodes 
+					LEFT JOIN dns_nameservers ON nodes.id = dns_nameservers.node_id 
+					LEFT JOIN dns_zones ON nodes.id = dns_zones.node_id 
+					LEFT JOIN dns_zones_nameservers ON  dns_zones.id = dns_zones_nameservers.zone_id OR dns_nameservers.id = dns_zones_nameservers.nameserver_id 
+					LEFT JOIN ip_addresses ON nodes.id = ip_addresses.node_id 
+					LEFT JOIN ip_ranges ON nodes.id = ip_ranges.node_id 
+					LEFT JOIN links ON nodes.id = links.node_id 
+					LEFT JOIN nodes_services ON nodes.id = nodes_services.node_id 
+					LEFT JOIN services ON nodes_services.service_id = services.id 
+					LEFT JOIN photos ON nodes.id = photos.node_id 
+					LEFT JOIN subnets ON nodes.id = subnets.node_id 
+					LEFT JOIN users_nodes ON nodes.id = users_nodes.node_id', 
+				"nodes.id = ".intval(get('node')))) { 
 				$main->message->set_fromlang('info', 'delete_success', makelink());
 			} else {
 				$main->message->set_fromlang('error', 'generic');		
