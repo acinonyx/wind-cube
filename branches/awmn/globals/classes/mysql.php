@@ -26,6 +26,7 @@ class mysql {
 	var $error_report;
 	var $last_query;
 	var $insert_id;
+	var $affected_rows;
 	var $log=FALSE;
 	var $logs_table='';
 	var $log_insert_id;
@@ -51,6 +52,7 @@ class mysql {
 	
 	function query($query) {
 		$this->insert_id = 0;
+		$this->affected_rows = 0;
 		$this->last_query=$query;
 		$this->total_queries += 1;
 		$mt = $this->getmicrotime();
@@ -179,6 +181,7 @@ class mysql {
 		if ($addlog && $this->log) $aff = $this->query_data("SELECT ".$table_start.".id FROM ".($using==""?"$table":"$using").($where==""?"":" WHERE $where"));
 		$query = "DELETE FROM $table".($using==""?"":" USING $using").($where==""?"":" WHERE $where");
 		$res = $this->query_data($query);
+		if ($res === TRUE) $this->affected_rows = mysql_affected_rows($this->mysql_link);
 		if ($addlog && isset($aff)) {
 			for ($i=0;$i<count($aff);$i++) {
 				$this->add_log('DELETE', $table_start, $aff[$i]['id'], '', $query, (!$res?$this->get_error():''));
