@@ -3,6 +3,7 @@
  * WiND - Wireless Nodes Database
  *
  * Copyright (C) 2005 Nikolaos Nikalexis <winner@cube.gr>
+ * Copyright (C) 2009 Vasilis Tsiligiannis <b_tsiligiannis@silverton.gr>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -138,7 +139,7 @@ class hostmaster_dnsnameserver {
 		global $construct,$db,$main;
 		if(get('action') === "delete")
 		{
-			$ret = $db->del("dns_nameservers", "id = '".get('nameserver')."'");
+			$ret = $db->del("dns_nameservers", '', "id = '".get('nameserver')."'");
 			if ($ret) {
 				$main->message->set_fromlang('info', 'delete_success', makelink(array("page" => "hostmaster", "subpage" => "dnsnameservers")));
 			} else {
