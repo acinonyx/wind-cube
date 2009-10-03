@@ -561,11 +561,13 @@ class mynodes {
 		if (isset($_POST['id'])) {
 			foreach( (array) $_POST['id'] as $key => $value) {
 				$db->del("photos", '', "id = '".intval($value)."' AND node_id = ".intval(get('node')));
-				$uploaddir = $vars['folders']['photos'];
-				$filename = 'photo-'.$value.".*";
-				delfile(ROOT_PATH.$uploaddir.$filename);
-				$filename = 'photo-'.$value."-*.*";
-				delfile(ROOT_PATH.$uploaddir.$filename);
+				if ($db->affected_rows > 0 ) {
+					$uploaddir = $vars['folders']['photos'];
+					$filename = 'photo-'.$value.".*";
+					delfile(ROOT_PATH.$uploaddir.$filename);
+					$filename = 'photo-'.$value."-*.*";
+					delfile(ROOT_PATH.$uploaddir.$filename);
+				}
 			}
 		}
 		foreach( (array) array('N','NE','E','SE','S','SW','W','NW', 'PANORAMIC') as $value) {
