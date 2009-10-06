@@ -495,7 +495,11 @@ class mynodes {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("links", '', "id = '".intval($value)."' AND node_id = ".intval(get('node')));
+			$ret = $ret && $db->del("links, links2, subnets", 
+						'links 
+							LEFT JOIN links AS links2 ON links.id = links2.peer_ap_id
+							LEFT JOIN subnets ON links.id = subnets.link_id', 
+						"links.id = '".intval($value)."' AND links.node_id = ".intval(get('node')));
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
