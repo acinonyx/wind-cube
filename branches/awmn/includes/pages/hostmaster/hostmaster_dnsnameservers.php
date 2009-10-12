@@ -39,10 +39,10 @@ class hostmaster_dnsnameservers {
 
 	function table_nameservers() {
 		global $construct, $db, $vars;
-		if (isset($_POST['dns_nameservers__ip'])) $_POST['dns_nameservers__ip'] = ip2long($_POST['dns_nameservers__ip']);
+		if (isset($_POST['dns_nameservers__ip'])) $_POST['dns_nameservers__ip'] = (is_ip($_POST['dns_nameservers__ip'])?ip2long($_POST['dns_nameservers__ip']):'');
 		if (isset($_GET['form_search_nameservers_search'])) {
 			$t = unserialize(stripslashes($_GET['form_search_nameservers_search']));
-			if (isset($t['dns_nameservers__ip'])) $t['dns_nameservers__ip'] = ip2long($t['dns_nameservers__ip']);
+			if (isset($t['dns_nameservers__ip'])) $t['dns_nameservers__ip'] = (is_ip($t['dns_nameservers__ip'])?ip2long($t['dns_nameservers__ip']):'');
 			$_GET['form_search_nameservers_search'] = addslashes(serialize($t));
 		}
 
