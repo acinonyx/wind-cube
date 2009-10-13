@@ -180,7 +180,10 @@ class hostmaster_dnszone {
 		global $construct, $db, $main;
 		if(get('action') === "delete")
 		{
-			$ret = $db->del("dns_zones", '', "id = '".get('zone')."'");
+			$ret = $db->del("dns_zones, dns_zones_nameservers", 
+					'dns_zones 
+						LEFT JOIN dns_zones_nameservers ON dns_zones.id = dns_zones_nameservers.zone_id', 
+					"dns_zones.id = '".get('zone')."'");
 			if ($ret) {
 				$main->message->set_fromlang('info', 'delete_success', makelink(array("page" => "hostmaster", "subpage" => "dnszones")));
 			} else {
