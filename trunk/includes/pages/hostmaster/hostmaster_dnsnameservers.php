@@ -91,7 +91,10 @@ class hostmaster_dnsnameservers {
 		global $db, $main;
 		$ret = TRUE;
 		foreach( (array) $_POST['id'] as $key => $value) {
-			$ret = $ret && $db->del("dns_nameservers", '', "id = '".$value."'");
+			$ret = $ret && $db->del("dns_nameservers, dns_zones_nameservers", 
+						'dns_nameservers 
+							LEFT JOIN dns_zones_nameservers ON dns_nameservers.id = dns_zones_nameservers.nameserver_id', 
+						"dns_nameservers.id = '".$value."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
