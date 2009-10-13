@@ -94,7 +94,7 @@ class hostmaster_dnsnameservers {
 			$ret = $ret && $db->del("dns_nameservers, dns_zones_nameservers", 
 						'dns_nameservers 
 							LEFT JOIN dns_zones_nameservers ON dns_nameservers.id = dns_zones_nameservers.nameserver_id', 
-						"dns_nameservers.id = '".$value."'");
+						"dns_nameservers.id = '".intval($value)."'");
 		}
 		if ($ret) {
 			$main->message->set_fromlang('info', 'delete_success', makelink("",TRUE));
