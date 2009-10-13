@@ -139,7 +139,10 @@ class hostmaster_dnsnameserver {
 		global $construct,$db,$main;
 		if(get('action') === "delete")
 		{
-			$ret = $db->del("dns_nameservers", '', "id = '".get('nameserver')."'");
+			$ret = $db->del("dns_nameservers, dns_zones_nameservers", 
+					'dns_nameservers 
+						LEFT JOIN dns_zones_nameservers ON dns_nameservers.id = dns_zones_nameservers.nameserver_id', 
+					"dns_nameservers.id = '".get('nameserver')."'");
 			if ($ret) {
 				$main->message->set_fromlang('info', 'delete_success', makelink(array("page" => "hostmaster", "subpage" => "dnsnameservers")));
 			} else {
