@@ -255,9 +255,6 @@ $lang = array(
 		'dns_zones__status-rejected' => 'Απορριφθέν',
 		'dns_zones__status-invalid' => 'Άκυρο',
 		'dns_zones__info' => 'Πληροφορίες',
-		'dns_zones__delete_req' => 'Αίτηση διαγραφής',
-		'dns_zones__delete_req-Y' => 'ΝΑΙ',
-		'dns_zones__delete_req-N' => 'ΟΧΙ',
 
 		'schema' => "Schema",
 
@@ -265,9 +262,6 @@ $lang = array(
 
 		'dns_nameservers__date_in' => 'Ημερομηνία',
 		'dns_nameservers__name' => 'Όνομα Nameserver',
-		'dns_nameservers__delete_req' => 'Αίτηση διαγραφής',
-		'dns_nameservers__delete_req-Y' => 'ΝΑΙ',
-		'dns_nameservers__delete_req-N' => 'ΟΧΙ',
 		'dns_nameservers__ip' => 'Διεύθυνση IP',
 		'dns_nameservers__status' => 'Κατάσταση',
 		'dns_nameservers__status-waiting' => 'Προς έλεγχο',

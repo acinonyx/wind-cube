@@ -254,9 +254,6 @@ $lang = array(
 		'dns_zones__status-rejected' => 'Rejected',
 		'dns_zones__status-invalid' => 'Invalid',
 		'dns_zones__info' => 'Info',
-		'dns_zones__delete_req' => 'Delete Request',
-		'dns_zones__delete_req-Y' => 'YES',
-		'dns_zones__delete_req-N' => 'NO',
 
 		'schema' => "Schema",
 
@@ -264,9 +261,6 @@ $lang = array(
 
 		'dns_nameservers__date_in' => 'Date',
 		'dns_nameservers__name' => 'Nameserver name',
-		'dns_nameservers__delete_req' => 'Delete request',
-		'dns_nameservers__delete_req-Y' => 'YES',
-		'dns_nameservers__delete_req-N' => 'NO',
 		'dns_nameservers__ip' => 'IP address',
 		'dns_nameservers__status' => 'Status',
 		'dns_nameservers__status-waiting' => 'Waiting check',
