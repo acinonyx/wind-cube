@@ -60,7 +60,7 @@ CUR_ZONE_S="/tmp/cur-zone-s"
 PHP_ZONE_S="/tmp/php-zone-s"
 
 # Make PHP_ZONE
-cd `dirname $PHP_SCRIPT`
+#cd `dirname $PHP_SCRIPT`
 php $PHP_SCRIPT $CUR_ZONE > $PHP_ZONE
 
 # Extract the serial number of the current zone file.
