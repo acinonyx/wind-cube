@@ -56,7 +56,7 @@
 						{$lang.tilt}: {$a_node_tilt|round:2}&#176;
 					</td>
 					<td align="center">
-						<--- {$lang.distance}: {$distance|round:3} km ---><br />
+						&lt;--- {$lang.distance}: {$distance|round:3} km ---&gt;<br />
 						<span style="color: brown;">
 							{$lang.fsl}:<br />
 							{$fsl|round:2} dBm @ 
