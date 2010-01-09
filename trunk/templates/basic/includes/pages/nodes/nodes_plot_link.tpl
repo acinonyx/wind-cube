@@ -74,7 +74,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td height="100%" colspan="3" align="center"><img src="{$plot_image}&amp;width=570&amp;height=250" width="570" height="250" /></td>
+					<td height="100%" colspan="3" align="center"><img src="{$plot_image}&amp;width=570&amp;height=250" width="570" height="250" alt="" /></td>
 				</tr>
 				<tr>
 					<td colspan="3" align="right">{include file=generic/link.tpl content="`$lang.google_earth`" link="$gearth"}</td>
