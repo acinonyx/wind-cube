@@ -259,7 +259,7 @@ class nodes_view {
 						$table_services->data[$key]['ip'] .= ' ('.$lang['db']['nodes_services__protocol-'.$table_services->data[$key]['protocol']].'/'.$table_services->data[$key]['port'].')';
 					}
 				}
-				$table_services->info['LINK']['services__title'][$key] = $table_services->data[$key]['url'];
+				$table_services->info['LINK']['services__title'][$key] = htmlspecialchars($table_services->data[$key]['url']);
 			}
 		}
 		$table_services->db_data_remove('id','nodes__id', 'url', 'protocol', 'port');
