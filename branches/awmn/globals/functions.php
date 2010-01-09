@@ -252,6 +252,7 @@ function ip_to_ranges($ip, $ret_null=TRUE) {
 		$d = 2 - intval(log10($t[$p]));
 		for ($i=1;$i<=$d;$i++) {
 			$t1[$p] = $t[$p] * pow(10,$i);
+			if ($t1[$p] > 255) continue;
 			$t2[$p] = $t1[$p] + pow(10,$i) - 1;
 			if ($t2[$p] > 255) $t2[$p] = 255;
 			$ret[] = array("min" => implode(".", $t1), "max" => implode(".", $t2));
