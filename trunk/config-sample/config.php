@@ -7,14 +7,17 @@ $config = array(
 		'username' => "youruser",
 		'password' => "yourpassword",
 		'database' => "yourdatabase",
-		'version' => yourversion		//Ex. 4.0, 4.1, 5
+		'version' => 5.0		//Ex. 4.0, 4.1, 5
 		),
 		
 	'site' => array(
 		'domain' => 'server.example.org',
 		'url' => 'http://server.example.org/'
 		),
-	
+	'community' => array(
+		'name' => 'Anonymous Wireless Community',
+		'short_name' => 'AWC'
+	),
 	'cookies' => array(
 		'expire' => (60 * 60 * 24 * 30)
 		),
@@ -91,22 +94,19 @@ $config = array(
                         
                         'default' => 'hybrid'
                         ),
-		'api' => '2.128e',
+		'api' => '3.5',
 		'keys' => array( // Domains must be as in $_SERVER['SERVER_NAME'] variable
-			'server.example.org/path' => 'example_key'
+			// 'server.example.org/path' => 'example_key'
 			),
 		'bounds' => array(
-			'min_latitude' => MINLAT_GPS_COORDINATE,
-			'min_longitude' => MINLON_GPS_COORDINATE,
-			'max_latitude' => MAXLAT_GPS_COORDINATE,
-			'max_longitude' => MAXLON_GPS_COORDINATE
+			'min_latitude' => 35, // MINLAT_GPS_COORDINATE,
+			'min_longitude' => 17, // MINLON_GPS_COORDINATE,
+			'max_latitude' => 42, // MAXLAT_GPS_COORDINATE,
+			'max_longitude' => 27 // MAXLON_GPS_COORDINATE
 			)
 		),
 	
 	'debug' => array(
 		'enabled' => FALSE
 		)
-		
 );
-
-?>

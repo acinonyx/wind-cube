@@ -1,8 +1,8 @@
-{*
+<?php
+/*
  * WiND - Wireless Nodes Database
- * Basic HTML Template
  *
- * Copyright (C) 2005 Konstantinos Papadimitriou <vinilios@cube.gr>
+ * Copyright (C) 2011 K. Paliouras <squarious _at gmail [dot] com>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *}
-<table width="100%"  border="0" cellpadding="0" cellspacing="0" class="table-header">
-      <tr>
-        <td class="table-header-td-left"><img src="{$img_dir}main_logo.png" alt="WiND Logo" /></td>
-{if $mylogo}<td class="table-header-td-right"><img src="{$mylogo_dir}mylogo.png" alt="{$lang.site_title}" /></td>{/if}
-      </tr>
-</table>
+ */
+ 
+?>
+<p class="description"> Welcome at WiND Installation. Please follow the installation guide to complete installation procedure.
+The guide will evaluate host and also request mandadotory information needed for the system to work.
+</p>
